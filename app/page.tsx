@@ -1,103 +1,112 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import { BalanceDisplay } from '../components/BalanceDisplay';
+import { LeverageSelector } from '../components/LeverageSelector';
+import { TradeEntryForm } from '../components/TradeEntryForm';
+import { TradeCard } from '../components/TradeCard';
+import { TradeHistory } from '../components/TradeHistory';
+import { SettingsModal } from '../components/SettingsModal';
+import { useBalance } from '../hooks/useBalance';
+import { useTrades } from '../hooks/useTrades';
+import { useSettings } from '../hooks/useSettings';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { settings, updateSettings } = useSettings();
+  const { balance, updateBalance, resetBalance } = useBalance(settings.initialBalance);
+  const { openTrades, closedTrades, addTrade, closeTrade, clearAllTrades } = useTrades();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const [selectedLeverage, setSelectedLeverage] = useState(settings.defaultLeverage);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const lockedAmount = useMemo(() => {
+    return openTrades.reduce((sum, trade) => sum + trade.entryAmount, 0);
+  }, [openTrades]);
+
+  const availableBalance = balance - lockedAmount;
+
+  const handleTradePlaced = (trade: any) => {
+    if (trade.entryAmount > availableBalance) {
+      alert('Insufficient balance');
+      return;
+    }
+    addTrade(trade);
+  };
+
+  const handleTakeProfit = (tradeId: string, pnl: number) => {
+    updateBalance(pnl);
+    closeTrade(tradeId, 'profit', pnl);
+  };
+
+  const handleStopLoss = (tradeId: string, pnl: number) => {
+    updateBalance(pnl);
+    closeTrade(tradeId, 'loss', pnl);
+  };
+
+  const handleClearHistory = () => {
+    clearAllTrades();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800">Trading Simulator</h1>
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            ⚙️ Settings
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Balance Display */}
+        <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Trading Interface */}
+          <div>
+            <LeverageSelector
+              selectedLeverage={selectedLeverage}
+              onLeverageChange={setSelectedLeverage}
+            />
+
+            <TradeEntryForm
+              leverage={selectedLeverage}
+              availableBalance={availableBalance}
+              onTradePlaced={handleTradePlaced}
+            />
+
+            {/* Open Trades */}
+            <div className="space-y-4">
+              {openTrades.map((trade) => (
+                <TradeCard
+                  key={trade.id}
+                  trade={trade}
+                  onTakeProfit={handleTakeProfit}
+                  onStopLoss={handleStopLoss}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column - Trade History */}
+          <div>
+            <TradeHistory trades={closedTrades} />
+          </div>
+        </div>
+
+        {/* Settings Modal */}
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          settings={settings}
+          onUpdateSettings={updateSettings}
+          onResetBalance={resetBalance}
+          onClearHistory={handleClearHistory}
+        />
+      </div>
     </div>
   );
 }
