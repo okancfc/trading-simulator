@@ -15,7 +15,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   return (
     <div className="text-right">
       <p className="text-xs text-gray-500 font-medium">Account Balance</p>
-      <p className="font-bold text-lg text-gray-900 -mt-1">
+      <p className="font-bold text-[14px] sm:text-base md:text-lg text-gray-900 -mt-1">
         {formatCurrency(balance)}
       </p>
     </div>

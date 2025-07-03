@@ -65,7 +65,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div
-        className={`bg-white rounded-2xl shadow-xl max-w-md w-full transform transition-all duration-200 ease-out ${
+        className={`bg-white rounded-2xl shadow-xl max-w-md w-full flex flex-col transform transition-all duration-200 ease-out ${
           isAnimatingOut ? "animate-modal-out" : "animate-modal-in"
         }`}
       >
@@ -82,9 +82,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        {/* DÜZELTME: İçerik alanı, ekran yüksekliğinin %70'ini geçemez.
+          Geçerse, kendi içinde kaydırılabilir olur.
+        */}
+        <div className="p-6 space-y-6 overflow-y-auto max-h-[70vh]">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+            <label className="block text-sm font-medium text-gray-700 mb-2 items-center">
               <BanknotesIcon className="h-5 w-5 mr-2 text-gray-400" />
               Initial Balance
             </label>
@@ -111,13 +114,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <TrashIcon className="h-5 w-5 mr-2 text-red-500" />
               Danger Zone
             </h3>
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center justify-between">
-              <p className="text-sm text-red-800 flex-1 mr-4">
+            {/* DÜZELTME: Bu bölüm mobil cihazlarda daha iyi görünmesi için
+              esnek hale getirildi (dikeyden yataya geçiş).
+            */}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <p className="text-sm text-red-800 flex-1">
                 This will permanently delete all trade history.
               </p>
               <button
                 onClick={handleClearHistoryConfirm}
-                className="py-2 px-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                className="py-2 px-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors flex-shrink-0"
               >
                 Clear History
               </button>
@@ -125,7 +131,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
         </div>
 
-        <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end gap-3">
+        <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end gap-3 border-t">
           <button
             onClick={handleClose}
             className="py-2 px-4 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors"

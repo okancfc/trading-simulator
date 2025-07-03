@@ -7,9 +7,11 @@ interface TradeHistoryProps {
 }
 
 export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
+  // DÜZELTME: Hiç işlem olmadığında gösterilen "boş durum" kutusunun
+  // yüksekliği daha tutarlı bir hale getirildi.
   if (trades.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500 h-full flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500 flex items-center justify-center min-h-[400px]">
         <div>
           <div className="text-4xl mb-2">📝</div>
           <p>No closed trades yet.</p>
@@ -19,7 +21,9 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg flex flex-col shadow-md h-[580px] overflow-y-auto">
+    // DÜZELTME: Sabit yükseklik (h-[580px]) kaldırıldı.
+    // Bileşen artık içeriğine göre büyüyecek ve küçülecek.
+    <div className="bg-white rounded-lg flex flex-col shadow-md">
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-xl font-semibold text-gray-800">
           📒 Trade History
@@ -29,10 +33,14 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6">
-        <ul className="divide-y divide-gray-200 space-y-0">
+      {/* İçerik çok uzadığında (çok fazla işlem olduğunda) sadece bu bölümün
+        kaydırılabilir olması için max-h-[450px] gibi bir sınır ekledik.
+        Bu, mobil uyumluluğu bozmazken, masaüstünde görünümü iyileştirir.
+      */}
+      <div className="flex-1 overflow-y-auto p-6 max-h-[450px]">
+        <ul className="divide-y divide-gray-200">
           {trades.map((trade) => (
-            <li key={trade.id} className="py-4 first:pt-0">
+            <li key={trade.id} className="py-4 first:pt-0 last:pb-0">
               <div className="flex justify-between items-start mb-1">
                 <div>
                   <h4 className="text-md font-semibold text-gray-800">
@@ -43,13 +51,13 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm">
                     {trade.outcome === "profit" ? (
-                      <span className="text-green-600 font-semibold">
-                        ✅ TP
+                      <span className="font-semibold text-green-600">
+                        ✅ Profit
                       </span>
                     ) : (
-                      <span className="text-red-600 font-semibold">❌ SL</span>
+                      <span className="font-semibold text-red-600">❌ Loss</span>
                     )}
                   </p>
                   <p
@@ -62,27 +70,27 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mt-2">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-600 mt-3 pt-3 border-t">
                 <div>
-                  <span className="block">Entry Amount</span>
+                  <span className="block opacity-70">Entry Amount</span>
                   <span className="font-semibold text-gray-800">
                     {formatCurrency(trade.entryAmount)}
                   </span>
                 </div>
                 <div>
-                  <span className="block">Leverage</span>
+                  <span className="block opacity-70">Leverage</span>
                   <span className="font-semibold text-gray-800">
                     {trade.leverage}x
                   </span>
                 </div>
                 <div>
-                  <span className="block">Entry Price</span>
+                  <span className="block opacity-70">Entry Price</span>
                   <span className="font-semibold text-gray-800">
                     {trade.entryPrice}
                   </span>
                 </div>
                 <div>
-                  <span className="block">Position Size</span>
+                  <span className="block opacity-70">Position Size</span>
                   <span className="font-semibold text-gray-800">
                     {formatCurrency(trade.positionSize)}
                   </span>

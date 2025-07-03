@@ -25,13 +25,13 @@ export const TradeCard: React.FC<TradeCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+    <div className="bg-white rounded-xl shadow-lg p-5 border-l-4 border-blue-500">
       <div className="flex justify-between items-start mb-4">
         <div>
           <h4 className="text-lg font-semibold text-gray-800">
-            {trade.pair} Position
+            {trade.pair}
           </h4>
-          <p className="text-sm text-gray-600">
+          <p className="text-xs text-gray-500">
             {trade.timestamp.toLocaleString()}
           </p>
         </div>
@@ -43,13 +43,17 @@ export const TradeCard: React.FC<TradeCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 rounded-md">
+      {/*
+        DÜZELTME: Bu grid varsayılan olarak tek sütun (mobil),
+        geniş ekranlarda iki sütun olacak şekilde güncellendi (`sm:grid-cols-2`).
+      */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
         <div>
           <p className="text-sm text-gray-600">Leverage</p>
           <p className="font-semibold">{trade.leverage}x</p>
         </div>
         <div>
-          <p className="text-sm text-gray-600">Position Size</p>
+          <p className="text-sm text-gray-600">Pos. Size</p>
           <p className="font-semibold">{formatCurrency(trade.positionSize)}</p>
         </div>
         <div>
@@ -62,13 +66,17 @@ export const TradeCard: React.FC<TradeCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      {/*
+        DÜZELTME: Butonlar da mobil cihazlarda daha iyi görünmesi için
+        tek sütundan başlayacak şekilde ayarlandı.
+      */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <button
           onClick={handleTakeProfit}
-          className="text-center p-3 bg-green-50 rounded-md hover:bg-green-100 transition-colors w-full"
+          className="text-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors w-full"
         >
           <p className="text-sm text-green-700">
-            TP ({trade.tpPercentage.toFixed(2)}%)
+            TP ({trade.tpPercentage.toFixed(1)}%)
           </p>
           <p className="text-lg font-bold text-green-600">
             +{formatCurrency(potentialProfit)}
@@ -76,20 +84,15 @@ export const TradeCard: React.FC<TradeCardProps> = ({
         </button>
         <button
           onClick={handleStopLoss}
-          className="text-center p-3 bg-red-50 rounded-md hover:bg-red-100 transition-colors w-full"
+          className="text-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors w-full"
         >
           <p className="text-sm text-red-700">
-            SL ({trade.slPercentage.toFixed(2)}%)
+            SL ({trade.slPercentage.toFixed(1)}%)
           </p>
           <p className="text-lg font-bold text-red-600">
             -{formatCurrency(potentialLoss)}
           </p>
         </button>
-      </div>
-
-      <div className="text-center text-sm text-gray-500 mt-2">
-        Trading Pair:{" "}
-        <span className="font-semibold text-gray-800">{trade.pair}</span>
       </div>
     </div>
   );

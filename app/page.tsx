@@ -74,20 +74,10 @@ export default function Home() {
   };
 
   return (
-    // Navbar'ın içeriğin üstünü kapatmaması için üstten boşluk (padding-top) artırıldı.
     <div className="min-h-screen bg-gray-50 pt-24">
-      {/*
-        ===================================================================
-        YENİ NAVIGATION BAR
-        - `fixed` ve `z-50` ile ekranın üstüne sabitlendi.
-        - `backdrop-blur-md` ile modern bir cam efekti eklendi.
-        - İçindeki elemanlar (ayarlar, sekmeler, bakiye) `flex` ile hizalandı.
-        ===================================================================
-      */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-20">
-            {/* Sol Taraf: Ayarlar Butonu */}
             <div className="flex-1 flex justify-start">
               <button
                 onClick={() => setIsSettingsOpen(true)}
@@ -98,7 +88,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Orta Kısım: Sekmeler */}
             <div className="flex-shrink-0">
               <div className="flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
                 {TABS.map((tab, index) => (
@@ -117,7 +106,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Sağ Taraf: Bakiye */}
             <div className="flex-1 flex justify-end">
               <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
             </div>
@@ -126,16 +114,11 @@ export default function Home() {
       </header>
 
       <div className="container mx-auto px-4">
-        {/*
-          ===================================================================
-          ESKİ YAPI KALDIRILDI
-          - Ayarlar butonu ve sekmeler yukarıdaki navbar'a taşındığı için
-            buradaki eski `div`'ler silindi.
-          ===================================================================
-        */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-xl mx-auto">
+          {/* Swiper'ın kendisi artık bir arka plana veya padding'e sahip değil */}
           <div className="mt-2">
             <Swiper
+              autoHeight={true}
               onSwiper={setSwiperInstance}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               modules={[Pagination]}
@@ -154,17 +137,19 @@ export default function Home() {
                 <TradeHistory key="history" trades={closedTrades} />,
                 <StatsPanel key="stats" trades={closedTrades} />,
               ].map((component, index) => (
-                <SwiperSlide key={index} className="p-1 h-full">
-                  <div className="h-full overflow-y-auto p-2">{component}</div>
+                // Düzeltme: Slaytların altına padding ekleyerek hem gölgelerin
+                // görünmesi hem de noktaların çakışmaması için alan yarattık.
+                <SwiperSlide key={index} className="p-2 pb-10">
+                  {component}
                 </SwiperSlide>
               ))}
             </Swiper>
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto mt-12 pb-5">
+        <div className="max-w-6xl mx-auto mt-12 pb-12">
           <h3 className="text-xl font-bold text-gray-800 mb-4 px-2">
-            🍄 Open Trades ({openTrades.length})
+           🍄 Open Trades ({openTrades.length})
           </h3>
           {openTrades.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
