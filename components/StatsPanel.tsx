@@ -67,7 +67,7 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
   }, [trades, timeframe]);
 
   return (
-    <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
+    <div className="bg-white rounded-lg p-6 mb-8 shadow-md h-[580px] overflow-y-auto">
       <h3 className="text-xl font-semibold text-gray-800 mb-4">
         📊 Performance Stats
       </h3>

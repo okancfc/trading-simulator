@@ -86,7 +86,7 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
   const positionSize = calculatePositionSize(amountNum, leverage);
 
   return (
-    <div className="bg-white rounded-lg p-5 shadow-md">
+    <div className="bg-white rounded-lg p-5 shadow-md overflow-y-auto h-[580px]">
       <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-4">
         🎯 Place Trade
       </h3>

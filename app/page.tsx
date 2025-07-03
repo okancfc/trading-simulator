@@ -112,7 +112,7 @@ export default function Home() {
               modules={[Pagination]}
               slidesPerView={1}
               pagination={{ clickable: true }}
-              className="h-[600px] w-full"
+              className="w-full"
             >
               {[
                 <TradeEntryForm
@@ -125,7 +125,7 @@ export default function Home() {
                 <TradeHistory key="history" trades={closedTrades} />,
                 <StatsPanel key="stats" trades={closedTrades} />,
               ].map((component, index) => (
-                <SwiperSlide key={index} className="p-4 h-full pb-7">
+                <SwiperSlide key={index} className="p-4 h-full">
                   <div className="h-full overflow-y-auto p-2">{component}</div>
                 </SwiperSlide>
               ))}
