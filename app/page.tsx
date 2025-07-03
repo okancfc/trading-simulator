@@ -74,38 +74,67 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-12 md:pt-20">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-4 -mt-10 pb-10">
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="rounded-full hover:bg-gray-200 transition-colors"
-              aria-label="Ayarlar"
-            >
-              <Bars3Icon className="h-8 w-8 text-gray-600" />
-            </button>
-
-            <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
-          </div>
-
-          <div className="flex justify-center gap-2 bg-gray-50 rounded-2xl p-2">
-            {TABS.map((tab, index) => (
+    // Navbar'ın içeriğin üstünü kapatmaması için üstten boşluk (padding-top) artırıldı.
+    <div className="min-h-screen bg-gray-50 pt-24">
+      {/*
+        ===================================================================
+        YENİ NAVIGATION BAR
+        - `fixed` ve `z-50` ile ekranın üstüne sabitlendi.
+        - `backdrop-blur-md` ile modern bir cam efekti eklendi.
+        - İçindeki elemanlar (ayarlar, sekmeler, bakiye) `flex` ile hizalandı.
+        ===================================================================
+      */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center h-20">
+            {/* Sol Taraf: Ayarlar Butonu */}
+            <div className="flex-1 flex justify-start">
               <button
-                key={tab.id}
-                onClick={() => handleTabClick(index)}
-                className={`py-3 px-6 font-medium text-center transition-all duration-300 w-1/3 text-sm rounded-xl ${
-                  activeIndex === index
-                    ? "bg-white text-blue-600 shadow-md ring-2 ring-blue-100 transform scale-105"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-white/50"
-                }`}
+                onClick={() => setIsSettingsOpen(true)}
+                className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+                aria-label="Ayarlar"
               >
-                {tab.title}
+                <Bars3Icon className="h-6 w-6 text-gray-700" />
               </button>
-            ))}
-          </div>
+            </div>
 
-          <div className="mt-6">
+            {/* Orta Kısım: Sekmeler */}
+            <div className="flex-shrink-0">
+              <div className="flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+                {TABS.map((tab, index) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabClick(index)}
+                    className={`py-2 px-5 font-semibold text-center transition-all duration-300 w-full text-sm rounded-full ${
+                      activeIndex === index
+                        ? "bg-white text-blue-600 shadow"
+                        : "text-gray-500 hover:text-blue-600"
+                    }`}
+                  >
+                    {tab.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sağ Taraf: Bakiye */}
+            <div className="flex-1 flex justify-end">
+              <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4">
+        {/*
+          ===================================================================
+          ESKİ YAPI KALDIRILDI
+          - Ayarlar butonu ve sekmeler yukarıdaki navbar'a taşındığı için
+            buradaki eski `div`'ler silindi.
+          ===================================================================
+        */}
+        <div className="max-w-4xl mx-auto">
+          <div className="mt-2">
             <Swiper
               onSwiper={setSwiperInstance}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
@@ -125,7 +154,7 @@ export default function Home() {
                 <TradeHistory key="history" trades={closedTrades} />,
                 <StatsPanel key="stats" trades={closedTrades} />,
               ].map((component, index) => (
-                <SwiperSlide key={index} className="p-4 h-full">
+                <SwiperSlide key={index} className="p-1 h-full">
                   <div className="h-full overflow-y-auto p-2">{component}</div>
                 </SwiperSlide>
               ))}
