@@ -1,7 +1,10 @@
-import { useLocalStorage } from './useLocalStorage';
+import { useLocalStorage } from "./useLocalStorage";
 
 export const useBalance = (initialBalance: number = 10000) => {
-  const [balance, setBalance] = useLocalStorage<number>('trading_balance', initialBalance);
+  const [balance, setBalance] = useLocalStorage<number>(
+    "trading_balance",
+    initialBalance
+  );
 
   const updateBalance = (amount: number) => {
     setBalance(Math.max(0, balance + amount));

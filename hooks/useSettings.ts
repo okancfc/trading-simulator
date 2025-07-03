@@ -1,5 +1,5 @@
-import { useLocalStorage } from './useLocalStorage';
-import type { Settings } from '../lib/types';
+import { useLocalStorage } from "./useLocalStorage";
+import type { Settings } from "../lib/types";
 
 const defaultSettings: Settings = {
   initialBalance: 10000,
@@ -8,7 +8,10 @@ const defaultSettings: Settings = {
 };
 
 export const useSettings = () => {
-  const [settings, setSettings] = useLocalStorage<Settings>('trading_settings', defaultSettings);
+  const [settings, setSettings] = useLocalStorage<Settings>(
+    "trading_settings",
+    defaultSettings
+  );
 
   const updateSettings = (newSettings: Partial<Settings>) => {
     setSettings({ ...settings, ...newSettings });

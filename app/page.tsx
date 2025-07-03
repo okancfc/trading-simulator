@@ -1,16 +1,11 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-
-// --- SWIPER KÜTÜPHANESİNDEN GEREKLİ İÇE AKTARMALAR ---
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import type { Swiper as SwiperCore } from 'swiper'; // Swiper instance tipi için
-
-// --- SWIPER STİLLERİ ---
-import 'swiper/css';
-import 'swiper/css/pagination';
-// Okları kaldırdığımız için navigation.css'e artık gerek yok.
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import type { Swiper as SwiperCore } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
 
 import { BalanceDisplay } from "../components/BalanceDisplay";
 import { TradeEntryForm } from "../components/TradeEntryForm";
@@ -21,12 +16,12 @@ import { useBalance } from "../hooks/useBalance";
 import { useTrades } from "../hooks/useTrades";
 import { useSettings } from "../hooks/useSettings";
 import { StatsPanel } from "../components/StatsPanel";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
-// Sekmeleri ve slaytları yönetmek için bir dizi oluşturalım
 const TABS = [
-  { id: 'trade', title: 'Trade' },
-  { id: 'history', title: 'History' },
-  { id: 'stats', title: 'Stats' }
+  { id: "trade", title: "Trade" },
+  { id: "history", title: "History" },
+  { id: "stats", title: "Stats" },
 ];
 
 export default function Home() {
@@ -41,13 +36,9 @@ export default function Home() {
     settings.defaultLeverage
   );
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  
-  // === YENİ STATE'LER: SWIPER KONTROLÜ İÇİN ===
-  // Swiper instance'ını tutmak için state (programatik olarak kontrol etmek için)
-  const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
-  // Aktif sekmenin/slaytın indeksini tutmak için state
-  const [activeIndex, setActiveIndex] = useState(0);
 
+  const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const lockedAmount = useMemo(() => {
     return openTrades.reduce((sum, trade) => sum + trade.entryAmount, 0);
@@ -57,7 +48,7 @@ export default function Home() {
 
   const handleTradePlaced = (trade: any) => {
     if (trade.entryAmount > availableBalance) {
-      alert("Insufficient balance");
+      alert("Insufficient available balance for this trade.");
       return;
     }
     addTrade(trade);
@@ -77,114 +68,102 @@ export default function Home() {
     clearAllTrades();
   };
 
-  // Sekmeye tıklandığında Swiper'ı ilgili slayta kaydıran fonksiyon
   const handleTabClick = (index: number) => {
     setActiveIndex(index);
     swiperInstance?.slideTo(index);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8 max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-800">
-            Trading Simulator
-          </h1>
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-          >
-            ⚙️ Settings
-          </button>
-        </div>
-
-        {/* Balance Display */}
+    <div className="min-h-screen bg-gray-50 pt-12 md:pt-20">
+      <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-center mb-4 -mt-10 pb-10">
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="rounded-full hover:bg-gray-200 transition-colors"
+              aria-label="Ayarlar"
+            >
+              <Bars3Icon className="h-8 w-8 text-gray-600" />
+            </button>
+
             <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
+          </div>
+
+          <div className="flex justify-center gap-2 bg-gray-50 rounded-2xl p-2">
+            {TABS.map((tab, index) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabClick(index)}
+                className={`py-3 px-6 font-medium text-center transition-all duration-300 w-1/3 text-sm rounded-xl ${
+                  activeIndex === index
+                    ? "bg-white text-blue-600 shadow-md ring-2 ring-blue-100 transform scale-105"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-white/50"
+                }`}
+              >
+                {tab.title}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <Swiper
+              onSwiper={setSwiperInstance}
+              onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+              modules={[Pagination]}
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+              className="h-[600px] w-full"
+            >
+              {[
+                <TradeEntryForm
+                  key="trade"
+                  setSelectedLeverage={setSelectedLeverage}
+                  leverage={selectedLeverage}
+                  availableBalance={availableBalance}
+                  onTradePlaced={handleTradePlaced}
+                />,
+                <TradeHistory key="history" trades={closedTrades} />,
+                <StatsPanel key="stats" trades={closedTrades} />,
+              ].map((component, index) => (
+                <SwiperSlide key={index} className="p-4 h-full pb-7">
+                  <div className="h-full overflow-y-auto p-2">{component}</div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
         </div>
 
-        {/* === DEĞİŞTİRİLEN BÖLÜM: ORTALANMIŞ VE SEKME EKLENMİŞ SWIPER === */}
-        <div className="max-w-3xl mx-auto mt-8">
-            {/* Sekmeli Navigasyon */}
-            <div className="flex justify-center border-b border-gray-200 mb-0">
-                {TABS.map((tab, index) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => handleTabClick(index)}
-                        className={`py-2 px-6 font-medium text-center transition-colors w-1/3 ${
-                            activeIndex === index
-                                ? 'border-b-2 border-blue-600 text-blue-600'
-                                : 'text-gray-500 hover:text-gray-800'
-                        }`}
-                    >
-                        {tab.title}
-                    </button>
-                ))}
+        <div className="max-w-6xl mx-auto mt-12 pb-5">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 px-2">
+            🍄 Open Trades ({openTrades.length})
+          </h3>
+          {openTrades.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {openTrades.map((trade) => (
+                <TradeCard
+                  key={trade.id}
+                  trade={trade}
+                  onTakeProfit={handleTakeProfit}
+                  onStopLoss={handleStopLoss}
+                />
+              ))}
             </div>
-            
-            {/* Swiper Paneli */}
-            <div className="p-2">
-                <Swiper
-                    // onSwiper ile instance'ı state'e kaydediyoruz
-                    onSwiper={setSwiperInstance}
-                    // Slayt değiştiğinde aktif indeksi güncelliyoruz
-                    onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-                    modules={[Pagination]} // Sadece Pagination modülü kaldı
-                    slidesPerView={1}
-                    pagination={{ clickable: true }} // Noktalar tıklanabilir
-                    className="h-full w-full"
-                >
-                    <SwiperSlide className="p-6">
-                        <TradeEntryForm
-                        setSelectedLeverage={setSelectedLeverage}
-                        leverage={selectedLeverage}
-                        availableBalance={availableBalance}
-                        onTradePlaced={handleTradePlaced}
-                        />
-                    </SwiperSlide>
-                    <SwiperSlide className="p-6">
-                        <TradeHistory trades={closedTrades} />
-                    </SwiperSlide>
-                    <SwiperSlide className="p-6">
-                        <StatsPanel trades={closedTrades} />
-                    </SwiperSlide>
-                </Swiper>
+          ) : (
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center text-gray-500">
+              No open trades.
             </div>
+          )}
         </div>
-
-        {/* Açık Pozisyonlar - Artık panelin altında yer alıyor */}
-        <div className="max-w-4xl mx-auto mt-10">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Open Trades ({openTrades.length})</h2>
-            {openTrades.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {openTrades.map((trade) => (
-                    <TradeCard
-                        key={trade.id}
-                        trade={trade}
-                        onTakeProfit={handleTakeProfit}
-                        onStopLoss={handleStopLoss}
-                    />
-                ))}
-                </div>
-            ) : (
-                <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500">
-                    No open trades.
-                </div>
-            )}
-        </div>
-
-
-        {/* Settings Modal */}
-        <SettingsModal
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          settings={settings}
-          onUpdateSettings={updateSettings}
-          onResetBalance={resetBalance}
-          onClearHistory={handleClearHistory}
-        />
       </div>
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        settings={settings}
+        onUpdateSettings={updateSettings}
+        onResetBalance={resetBalance}
+        onClearHistory={handleClearHistory}
+      />
     </div>
   );
 }

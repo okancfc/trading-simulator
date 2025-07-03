@@ -1,6 +1,6 @@
-import React from 'react';
-import { formatCurrency } from '../lib/utils';
-import type { Trade } from '../lib/types';
+import React from "react";
+import { formatCurrency } from "../lib/utils";
+import type { Trade } from "../lib/types";
 
 interface TradeCardProps {
   trade: Trade;
@@ -28,12 +28,18 @@ export const TradeCard: React.FC<TradeCardProps> = ({
     <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h4 className="text-lg font-semibold text-gray-800">{trade.pair} Position</h4>
-          <p className="text-sm text-gray-600">{trade.timestamp.toLocaleString()}</p>
+          <h4 className="text-lg font-semibold text-gray-800">
+            {trade.pair} Position
+          </h4>
+          <p className="text-sm text-gray-600">
+            {trade.timestamp.toLocaleString()}
+          </p>
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-600">Entry Amount</p>
-          <p className="text-lg font-semibold">{formatCurrency(trade.entryAmount)}</p>
+          <p className="text-lg font-semibold">
+            {formatCurrency(trade.entryAmount)}
+          </p>
         </div>
       </div>
 
@@ -61,20 +67,29 @@ export const TradeCard: React.FC<TradeCardProps> = ({
           onClick={handleTakeProfit}
           className="text-center p-3 bg-green-50 rounded-md hover:bg-green-100 transition-colors w-full"
         >
-          <p className="text-sm text-green-700">TP ({trade.tpPercentage.toFixed(2)}%)</p>
-          <p className="text-lg font-bold text-green-600">+{formatCurrency(potentialProfit)}</p>
+          <p className="text-sm text-green-700">
+            TP ({trade.tpPercentage.toFixed(2)}%)
+          </p>
+          <p className="text-lg font-bold text-green-600">
+            +{formatCurrency(potentialProfit)}
+          </p>
         </button>
         <button
           onClick={handleStopLoss}
           className="text-center p-3 bg-red-50 rounded-md hover:bg-red-100 transition-colors w-full"
         >
-          <p className="text-sm text-red-700">SL ({trade.slPercentage.toFixed(2)}%)</p>
-          <p className="text-lg font-bold text-red-600">-{formatCurrency(potentialLoss)}</p>
+          <p className="text-sm text-red-700">
+            SL ({trade.slPercentage.toFixed(2)}%)
+          </p>
+          <p className="text-lg font-bold text-red-600">
+            -{formatCurrency(potentialLoss)}
+          </p>
         </button>
       </div>
 
       <div className="text-center text-sm text-gray-500 mt-2">
-        Trading Pair: <span className="font-semibold text-gray-800">{trade.pair}</span>
+        Trading Pair:{" "}
+        <span className="font-semibold text-gray-800">{trade.pair}</span>
       </div>
     </div>
   );

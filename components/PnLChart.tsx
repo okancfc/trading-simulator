@@ -1,23 +1,33 @@
-import React, { useMemo, useState } from 'react';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import type { ClosedTrade } from '../lib/types';
+import React, { useMemo, useState } from "react";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import type { ClosedTrade } from "../lib/types";
 
 interface PnLChartProps {
   trades: ClosedTrade[];
 }
 
-type TimeFrame = 'daily' | 'weekly' | 'monthly';
+type TimeFrame = "daily" | "weekly" | "monthly";
 
 export const PnLChart: React.FC<PnLChartProps> = ({ trades }) => {
-  const [timeframe, setTimeframe] = useState<TimeFrame>('daily');
+  const [timeframe, setTimeframe] = useState<TimeFrame>("daily");
 
   const formatDate = (date: Date, type: TimeFrame) => {
-    if (type === 'daily') return date.toLocaleDateString();
-    if (type === 'weekly') {
+    if (type === "daily") return date.toLocaleDateString();
+    if (type === "weekly") {
       const week = getWeekNumber(date);
       return `${date.getFullYear()} - W${week}`;
     }
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const getWeekNumber = (d: Date) => {
@@ -25,12 +35,14 @@ export const PnLChart: React.FC<PnLChartProps> = ({ trades }) => {
     const dayNum = date.getUTCDay() || 7;
     date.setUTCDate(date.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    return Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+    return Math.ceil(
+      ((date.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
+    );
   };
 
   const groupedData = useMemo(() => {
     const map = new Map<string, number>();
-    trades.forEach(trade => {
+    trades.forEach((trade) => {
       const key = formatDate(new Date(trade.closeTimestamp), timeframe);
       map.set(key, (map.get(key) || 0) + trade.pnl);
     });
@@ -61,7 +73,12 @@ export const PnLChart: React.FC<PnLChartProps> = ({ trades }) => {
             <XAxis dataKey="date" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="pnl" stroke="#4ade80" strokeWidth={2} />
+            <Line
+              type="monotone"
+              dataKey="pnl"
+              stroke="#4ade80"
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       )}
