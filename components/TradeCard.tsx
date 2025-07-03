@@ -28,10 +28,8 @@ export const TradeCard: React.FC<TradeCardProps> = ({
     <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h4 className="text-lg font-semibold text-gray-800">Open Position</h4>
-          <p className="text-sm text-gray-600">
-            {trade.timestamp.toLocaleString()}
-          </p>
+          <h4 className="text-lg font-semibold text-gray-800">{trade.pair} Position</h4>
+          <p className="text-sm text-gray-600">{trade.timestamp.toLocaleString()}</p>
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-600">Entry Amount</p>
@@ -48,36 +46,35 @@ export const TradeCard: React.FC<TradeCardProps> = ({
           <p className="text-sm text-gray-600">Position Size</p>
           <p className="font-semibold">{formatCurrency(trade.positionSize)}</p>
         </div>
+        <div>
+          <p className="text-sm text-gray-600">TP Price</p>
+          <p className="font-semibold text-green-600">{trade.tpPrice}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-600">SL Price</p>
+          <p className="font-semibold text-red-600">{trade.slPrice}</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="text-center p-3 bg-green-50 rounded-md">
-          <p className="text-sm text-green-700">TP ({trade.tpPercentage}%)</p>
-          <p className="text-lg font-bold text-green-600">
-            +{formatCurrency(potentialProfit)}
-          </p>
-        </div>
-        <div className="text-center p-3 bg-red-50 rounded-md">
-          <p className="text-sm text-red-700">SL ({trade.slPercentage}%)</p>
-          <p className="text-lg font-bold text-red-600">
-            -{formatCurrency(potentialLoss)}
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
         <button
           onClick={handleTakeProfit}
-          className="py-3 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+          className="text-center p-3 bg-green-50 rounded-md hover:bg-green-100 transition-colors w-full"
         >
-          ✅ Take Profit
+          <p className="text-sm text-green-700">TP ({trade.tpPercentage.toFixed(2)}%)</p>
+          <p className="text-lg font-bold text-green-600">+{formatCurrency(potentialProfit)}</p>
         </button>
         <button
           onClick={handleStopLoss}
-          className="py-3 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+          className="text-center p-3 bg-red-50 rounded-md hover:bg-red-100 transition-colors w-full"
         >
-          ❌ Stop Loss
+          <p className="text-sm text-red-700">SL ({trade.slPercentage.toFixed(2)}%)</p>
+          <p className="text-lg font-bold text-red-600">-{formatCurrency(potentialLoss)}</p>
         </button>
+      </div>
+
+      <div className="text-center text-sm text-gray-500 mt-2">
+        Trading Pair: <span className="font-semibold text-gray-800">{trade.pair}</span>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
-import { formatCurrency } from '../lib/utils';
 import type { ClosedTrade } from '../lib/types';
+import { formatCurrency } from '../lib/utils';
 
 interface TradeHistoryProps {
   trades: ClosedTrade[];
@@ -9,60 +9,62 @@ interface TradeHistoryProps {
 export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
   if (trades.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Trade History</h3>
-        <p className="text-gray-600">No trades completed yet.</p>
+      <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500">
+        No closed trades yet.
       </div>
     );
   }
 
-  const totalPnL = trades.reduce((sum, trade) => sum + trade.pnl, 0);
-  const winRate = trades.length > 0 ? (trades.filter(t => t.outcome === 'profit').length / trades.length) * 100 : 0;
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-gray-800">Trade History</h3>
-        <div className="text-right">
-          <p className="text-sm text-gray-600">Total P&L</p>
-          <p className={`text-lg font-bold ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {totalPnL >= 0 ? '+' : ''}{formatCurrency(totalPnL)}
-          </p>
-          <p className="text-sm text-gray-600">Win Rate: {winRate.toFixed(1)}%</p>
-        </div>
-      </div>
-
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+      <h3 className="text-xl font-semibold text-gray-800 mb-4">📒 Trade History</h3>
+      <ul className="divide-y divide-gray-200">
         {trades.map((trade) => (
-          <div
-            key={trade.id}
-            className={`p-4 rounded-md border-l-4 ${
-              trade.outcome === 'profit' ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'
-            }`}
-          >
-            <div className="flex justify-between items-center">
+          <li key={trade.id} className="py-4">
+            <div className="flex justify-between items-start mb-1">
               <div>
-                <p className="font-medium text-gray-800">
-                  {formatCurrency(trade.entryAmount)} @ {trade.leverage}x
-                </p>
-                <p className="text-sm text-gray-600">
-                  {trade.closeTimestamp.toLocaleString()}
-                </p>
+                <h4 className="text-md font-semibold text-gray-800">{trade.pair} Trade</h4>
+                <p className="text-sm text-gray-500">{new Date(trade.closeTimestamp).toLocaleString()}</p>
               </div>
               <div className="text-right">
-                <p className={`text-lg font-bold ${
-                  trade.outcome === 'profit' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {trade.pnl >= 0 ? '+' : ''}{formatCurrency(trade.pnl)}
+                <p className="text-sm text-gray-500">
+                  {trade.outcome === 'profit' ? (
+                    <span className="text-green-600 font-semibold">✅ TP</span>
+                  ) : (
+                    <span className="text-red-600 font-semibold">❌ SL</span>
+                  )}
                 </p>
-                <p className="text-sm text-gray-600">
-                  {trade.outcome === 'profit' ? '✅ TP' : '❌ SL'}
+                <p
+                  className={`text-lg font-bold ${
+                    trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {formatCurrency(trade.pnl)}
                 </p>
               </div>
             </div>
-          </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mt-2">
+              <div>
+                <span className="block">Entry Amount</span>
+                <span className="font-semibold text-gray-800">{formatCurrency(trade.entryAmount)}</span>
+              </div>
+              <div>
+                <span className="block">Leverage</span>
+                <span className="font-semibold text-gray-800">{trade.leverage}x</span>
+              </div>
+              <div>
+                <span className="block">Entry Price</span>
+                <span className="font-semibold text-gray-800">{trade.entryPrice}</span>
+              </div>
+              <div>
+                <span className="block">Position Size</span>
+                <span className="font-semibold text-gray-800">{formatCurrency(trade.positionSize)}</span>
+              </div>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };

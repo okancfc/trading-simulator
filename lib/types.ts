@@ -1,10 +1,14 @@
 export interface Trade {
     id: string;
+    pair: string;
     entryAmount: number;
     leverage: number;
     positionSize: number;
-    tpPercentage: number;  
-    slPercentage: number; 
+    entryPrice: number;
+    tpPrice: number;          
+    slPrice: number;          
+    tpPercentage: number;     
+    slPercentage: number;  
     timestamp: Date;
     status: 'open' | 'closed';
   }

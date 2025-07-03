@@ -5,29 +5,35 @@ interface LeverageSelectorProps {
   onLeverageChange: (leverage: number) => void;
 }
 
-const leverageOptions = [1, 2, 5, 10, 20, 50, 100];
-
 export const LeverageSelector: React.FC<LeverageSelectorProps> = ({
   selectedLeverage,
   onLeverageChange,
 }) => {
+  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Slider'dan gelen değeri doğrudan sayıya çevirip state'i güncelliyoruz.
+    const newLeverage = parseInt(event.target.value, 10);
+    onLeverageChange(newLeverage);
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-3">Leverage</h3>
-      <div className="flex flex-wrap gap-2">
-        {leverageOptions.map((leverage) => (
-          <button
-            key={leverage}
-            onClick={() => onLeverageChange(leverage)}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              selectedLeverage === leverage
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {leverage}x
-          </button>
-        ))}
+    <div className="py-4">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-lg font-semibold text-gray-800">Leverage</h3>
+        {/* Seçili kaldıraç değerini gösteren etiket */}
+        <span className="px-3 py-1 text-sm font-bold text-white bg-blue-600 rounded-full">
+          {selectedLeverage}x
+        </span>
+      </div>
+      <div className="flex items-center gap-4">
+        <input
+          type="range"
+          min="1"      // Minimum kaldıraç değeri
+          max="100"    // Maksimum kaldıraç değeri
+          step="1"     // Artış adımı
+          value={selectedLeverage} // Değer doğrudan state'ten geliyor
+          onChange={handleSliderChange}
+          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+        />
       </div>
     </div>
   );

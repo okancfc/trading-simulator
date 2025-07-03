@@ -1,22 +1,29 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import { BalanceDisplay } from '../components/BalanceDisplay';
-import { LeverageSelector } from '../components/LeverageSelector';
-import { TradeEntryForm } from '../components/TradeEntryForm';
-import { TradeCard } from '../components/TradeCard';
-import { TradeHistory } from '../components/TradeHistory';
-import { SettingsModal } from '../components/SettingsModal';
-import { useBalance } from '../hooks/useBalance';
-import { useTrades } from '../hooks/useTrades';
-import { useSettings } from '../hooks/useSettings';
+import React, { useState, useMemo } from "react";
+import { BalanceDisplay } from "../components/BalanceDisplay";
+import { LeverageSelector } from "../components/LeverageSelector";
+import { TradeEntryForm } from "../components/TradeEntryForm";
+import { TradeCard } from "../components/TradeCard";
+import { TradeHistory } from "../components/TradeHistory";
+import { SettingsModal } from "../components/SettingsModal";
+import { useBalance } from "../hooks/useBalance";
+import { useTrades } from "../hooks/useTrades";
+import { useSettings } from "../hooks/useSettings";
+import { StatsPanel } from "../components/StatsPanel";
+import { PnLChart } from "../components/PnLChart";
 
 export default function Home() {
   const { settings, updateSettings } = useSettings();
-  const { balance, updateBalance, resetBalance } = useBalance(settings.initialBalance);
-  const { openTrades, closedTrades, addTrade, closeTrade, clearAllTrades } = useTrades();
+  const { balance, updateBalance, resetBalance } = useBalance(
+    settings.initialBalance
+  );
+  const { openTrades, closedTrades, addTrade, closeTrade, clearAllTrades } =
+    useTrades();
 
-  const [selectedLeverage, setSelectedLeverage] = useState(settings.defaultLeverage);
+  const [selectedLeverage, setSelectedLeverage] = useState(
+    settings.defaultLeverage
+  );
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const lockedAmount = useMemo(() => {
@@ -27,7 +34,7 @@ export default function Home() {
 
   const handleTradePlaced = (trade: any) => {
     if (trade.entryAmount > availableBalance) {
-      alert('Insufficient balance');
+      alert("Insufficient balance");
       return;
     }
     addTrade(trade);
@@ -35,12 +42,12 @@ export default function Home() {
 
   const handleTakeProfit = (tradeId: string, pnl: number) => {
     updateBalance(pnl);
-    closeTrade(tradeId, 'profit', pnl);
+    closeTrade(tradeId, "profit", pnl);
   };
 
   const handleStopLoss = (tradeId: string, pnl: number) => {
     updateBalance(pnl);
-    closeTrade(tradeId, 'loss', pnl);
+    closeTrade(tradeId, "loss", pnl);
   };
 
   const handleClearHistory = () => {
@@ -52,7 +59,9 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800">Trading Simulator</h1>
+          <h1 className="text-4xl font-bold text-gray-800">
+            Trading Simulator
+          </h1>
           <button
             onClick={() => setIsSettingsOpen(true)}
             className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
@@ -67,12 +76,8 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Trading Interface */}
           <div>
-            <LeverageSelector
-              selectedLeverage={selectedLeverage}
-              onLeverageChange={setSelectedLeverage}
-            />
-
             <TradeEntryForm
+              setSelectedLeverage={setSelectedLeverage}
               leverage={selectedLeverage}
               availableBalance={availableBalance}
               onTradePlaced={handleTradePlaced}
@@ -91,22 +96,23 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Column - Trade History */}
-          <div>
+          <div className="space-y-6">
+            <StatsPanel trades={closedTrades} />
             <TradeHistory trades={closedTrades} />
           </div>
-        </div>
 
-        {/* Settings Modal */}
-        <SettingsModal
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          settings={settings}
-          onUpdateSettings={updateSettings}
-          onResetBalance={resetBalance}
-          onClearHistory={handleClearHistory}
-        />
+          {/* Settings Modal */}
+          <SettingsModal
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+            settings={settings}
+            onUpdateSettings={updateSettings}
+            onResetBalance={resetBalance}
+            onClearHistory={handleClearHistory}
+          />
+        </div>
       </div>
+      );
     </div>
   );
 }
