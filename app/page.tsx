@@ -93,26 +93,37 @@ export default function Home() {
             <div className="flex-1 flex justify-start">
               <button
                 onClick={() => setIsSettingsOpen(true)}
-                className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+                className="p-2 rounded-full hover:bg-gray-200 transition-all duration-200 hover:scale-110 active:scale-95 group"
                 aria-label="Ayarlar"
               >
-                <Cog6ToothIcon className="h-6 w-6 text-gray-700" />
+                <Cog6ToothIcon className="h-6 w-6 text-gray-700 transition-transform duration-200 group-hover:rotate-90" />
               </button>
             </div>
 
             <div className="flex-shrink-0">
-              <div className="flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+              <div className="relative flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+                {/* Sliding Background */}
+                <div 
+                  className="absolute top-1.5 bg-white rounded-full shadow-lg transition-all duration-300 ease-out"
+                  style={{
+                    left: `${activeIndex * (100 / 3)}%`,
+                    height: 'calc(100% - 0.75rem)',
+                    marginLeft: '0.375rem',
+                    marginRight: '0.375rem',
+                    width: 'calc(33.333% - 0.75rem)'
+                  }}
+                />
                 {TABS.map((tab, index) => (
                   <button
                     key={tab.id}
                     onClick={() => handleTabClick(index)}
-                    className={`py-2 px-5 font-semibold text-center transition-all duration-300 w-full text-sm rounded-full ${
+                    className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 ${
                       activeIndex === index
-                        ? "bg-white text-blue-600 shadow"
+                        ? "text-blue-600 scale-105"
                         : "text-gray-500 hover:text-blue-600"
                     }`}
                   >
-                    {tab.title}
+                    <span className="relative z-10">{tab.title}</span>
                   </button>
                 ))}
               </div>
@@ -134,10 +145,10 @@ export default function Home() {
               <div className="flex-1 flex justify-start">
                 <button
                   onClick={() => setIsSettingsOpen(true)}
-                  className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+                  className="p-2 rounded-full hover:bg-gray-200 transition-all duration-200 hover:scale-110 active:scale-95 group"
                   aria-label="Ayarlar"
                 >
-                  <Cog6ToothIcon className="h-6 w-6 text-gray-700" />
+                  <Cog6ToothIcon className="h-6 w-6 text-gray-700 transition-transform duration-200 group-hover:rotate-90" />
                 </button>
               </div>
               <div className="flex-1 flex justify-end">
@@ -146,18 +157,29 @@ export default function Home() {
             </div>
 
             <div className="flex-shrink-0 mt-2">
-              <div className="flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+              <div className="relative flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+                {/* Sliding Background for Mobile */}
+                <div 
+                  className="absolute top-1.5 bg-white rounded-full shadow-lg transition-all duration-300 ease-out"
+                  style={{
+                    left: `${activeIndex * (100 / 3)}%`,
+                    height: 'calc(100% - 0.75rem)',
+                    marginLeft: '0.375rem',
+                    marginRight: '0.375rem',
+                    width: 'calc(33.333% - 0.75rem)'
+                  }}
+                />
                 {TABS.map((tab, index) => (
                   <button
                     key={tab.id}
                     onClick={() => handleTabClick(index)}
-                    className={`py-2 px-5 font-semibold text-center transition-all duration-300 w-full text-sm rounded-full ${
+                    className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 active:scale-95 ${
                       activeIndex === index
-                        ? "bg-white text-blue-600 shadow"
+                        ? "text-blue-600 scale-105"
                         : "text-gray-500 hover:text-blue-600"
                     }`}
                   >
-                    {tab.title}
+                    <span className="relative z-10">{tab.title}</span>
                   </button>
                 ))}
               </div>
@@ -183,6 +205,7 @@ export default function Home() {
               slidesPerView={1}
               pagination={{ clickable: true }}
               className="w-full"
+              speed={300}
             >
               {[
                 <TradeEntryForm
