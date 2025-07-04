@@ -16,7 +16,7 @@ import { useBalance } from "../hooks/useBalance";
 import { useTrades } from "../hooks/useTrades";
 import { useSettings } from "../hooks/useSettings";
 import { StatsPanel } from "../components/StatsPanel";
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 const TABS = [
   { id: "trade", title: "Trade" },
@@ -74,17 +74,29 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
+    <div className="min-h-screen bg-gray-50 pt-32 md:pt-24">
+      {/*
+        ===================================================================
+        RESPONSIVE HEADER DÜZENLEMESİ
+        ===================================================================
+      */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center h-20">
+          
+          {/*
+            ============================================================
+            1. MASAÜSTÜ İÇİN HEADER (Eski, Tek Satırlı Hali)
+            - `hidden md:flex` ile sadece orta ve büyük ekranlarda görünür.
+            ============================================================
+          */}
+          <div className="hidden md:flex justify-between items-center h-20">
             <div className="flex-1 flex justify-start">
               <button
                 onClick={() => setIsSettingsOpen(true)}
                 className="p-2 rounded-full hover:bg-gray-200 transition-colors"
                 aria-label="Ayarlar"
               >
-                <Bars3Icon className="h-6 w-6 text-gray-700" />
+                <Cog6ToothIcon className="h-6 w-6 text-gray-700" />
               </button>
             </div>
 
@@ -110,15 +122,61 @@ export default function Home() {
               <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
             </div>
           </div>
+
+          {/*
+            ============================================================
+            2. MOBİL İÇİN HEADER (Yeni, İki Satırlı Hali)
+            - `flex md:hidden` ile sadece küçük ekranlarda görünür.
+            ============================================================
+          */}
+          <div className="flex flex-col md:hidden py-3">
+            <div className="w-full flex justify-between items-center">
+              <div className="flex-1 flex justify-start">
+                <button
+                  onClick={() => setIsSettingsOpen(true)}
+                  className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+                  aria-label="Ayarlar"
+                >
+                  <Cog6ToothIcon className="h-6 w-6 text-gray-700" />
+                </button>
+              </div>
+              <div className="flex-1 flex justify-end">
+                <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
+              </div>
+            </div>
+
+            <div className="flex-shrink-0 mt-2">
+              <div className="flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+                {TABS.map((tab, index) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabClick(index)}
+                    className={`py-2 px-5 font-semibold text-center transition-all duration-300 w-full text-sm rounded-full ${
+                      activeIndex === index
+                        ? "bg-white text-blue-600 shadow"
+                        : "text-gray-500 hover:text-blue-600"
+                    }`}
+                  >
+                    {tab.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
         </div>
       </header>
 
+      {/* Sayfa içeriği */}
       <div className="container mx-auto px-4">
         <div className="max-w-xl mx-auto">
-          {/* Swiper'ın kendisi artık bir arka plana veya padding'e sahip değil */}
+          {/*
+            DÜZELTME: Sabit yükseklik (h-[...]) kaldırıldı.
+            Artık yükseklik, içindeki slaytlar tarafından belirlenecek.
+          */}
           <div className="mt-2">
             <Swiper
-              autoHeight={true}
+              // DÜZELTME: autoHeight kaldırıldı.
               onSwiper={setSwiperInstance}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               modules={[Pagination]}
@@ -137,8 +195,6 @@ export default function Home() {
                 <TradeHistory key="history" trades={closedTrades} />,
                 <StatsPanel key="stats" trades={closedTrades} />,
               ].map((component, index) => (
-                // Düzeltme: Slaytların altına padding ekleyerek hem gölgelerin
-                // görünmesi hem de noktaların çakışmaması için alan yarattık.
                 <SwiperSlide key={index} className="p-2 pb-10">
                   {component}
                 </SwiperSlide>

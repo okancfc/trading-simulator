@@ -7,11 +7,9 @@ interface TradeHistoryProps {
 }
 
 export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
-  // DÜZELTME: Hiç işlem olmadığında gösterilen "boş durum" kutusunun
-  // yüksekliği daha tutarlı bir hale getirildi.
   if (trades.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500 flex items-center justify-center min-h-[400px]">
+      <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500 flex items-center justify-center min-h-[550px]">
         <div>
           <div className="text-4xl mb-2">📝</div>
           <p>No closed trades yet.</p>
@@ -21,8 +19,6 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
   }
 
   return (
-    // DÜZELTME: Sabit yükseklik (h-[580px]) kaldırıldı.
-    // Bileşen artık içeriğine göre büyüyecek ve küçülecek.
     <div className="bg-white rounded-lg flex flex-col shadow-md">
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-xl font-semibold text-gray-800">
@@ -33,10 +29,6 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
         </p>
       </div>
 
-      {/* İçerik çok uzadığında (çok fazla işlem olduğunda) sadece bu bölümün
-        kaydırılabilir olması için max-h-[450px] gibi bir sınır ekledik.
-        Bu, mobil uyumluluğu bozmazken, masaüstünde görünümü iyileştirir.
-      */}
       <div className="flex-1 overflow-y-auto p-6 max-h-[450px]">
         <ul className="divide-y divide-gray-200">
           {trades.map((trade) => (

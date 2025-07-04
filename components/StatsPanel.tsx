@@ -67,8 +67,7 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
   }, [trades, timeframe]);
 
   return (
-    // DÜZELTME: Sabit yükseklik (h-[580px]) ve overflow-y-auto kaldırıldı.
-    <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
+    <div className="bg-white rounded-lg p-6 mb-8 shadow-md min-h-[550px]">
       <h3 className="text-xl font-semibold text-gray-800 mb-4">
         📊 Performance Stats
       </h3>
@@ -128,7 +127,7 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
         </div>
 
         {groupedData.length === 0 ? (
-          <p className="text-sm text-gray-500">No data available.</p>
+          <p className="flex justify-center text-sm text-gray-500 py-20">No data available.</p>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={groupedData}>
