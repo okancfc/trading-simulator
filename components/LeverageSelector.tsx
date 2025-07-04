@@ -11,12 +11,22 @@ export const LeverageSelector: React.FC<LeverageSelectorProps> = ({
 }) => {
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newLeverage = parseInt(event.target.value, 10);
+
+    // Ana bileşendeki durumu her zaman güncelle
     onLeverageChange(newLeverage);
+
+    // --- YENİ EKLENEN TİTREŞİM MANTIĞI ---
+
+    // Sadece kaldıraç değeri değiştiğinde (her adımda bir kez) titreşim gönder
+    // ve tarayıcının bu özelliği desteklediğinden emin ol.
+    if (newLeverage !== selectedLeverage && navigator.vibrate) {
+      // Çok kısa bir titreşim (10-20 milisaniye) "tırtıklı" hissi için idealdir.
+      navigator.vibrate(15);
+    }
+    // ------------------------------------
   };
 
   return (
-    // DÜZELTME BURADA: Swiper'ın bu bileşendeki kaydırma olaylarını
-    // görmezden gelmesi için `swiper-no-swiping` sınıfı eklendi.
     <div className="py-2 swiper-no-swiping">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-md font-semibold text-gray-700">Leverage</h3>
@@ -32,8 +42,6 @@ export const LeverageSelector: React.FC<LeverageSelectorProps> = ({
           step="1"
           value={selectedLeverage}
           onChange={handleSliderChange}
-          // Bir önceki adımdaki `touch-pan-y` sınıfı, tarayıcının sayfa
-          // kaydırmasını engellemek için hala gereklidir.
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 touch-pan-y"
         />
       </div>

@@ -19,7 +19,7 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg flex flex-col shadow-md">
+    <div className="bg-white rounded-lg flex flex-col shadow-md min-h-[550px]">
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-xl font-semibold text-gray-800">
           📒 Trade History
