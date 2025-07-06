@@ -74,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-32 md:pt-24">
+    <div className="min-h-screen overflow-y-auto scrollbar-hide bg-gray-50 pt-32 md:pt-24">
       {/*
         ===================================================================
         RESPONSIVE HEADER DÜZENLEMESİ

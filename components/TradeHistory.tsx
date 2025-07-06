@@ -76,9 +76,17 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                   </span>
                 </div>
                 <div>
-                  <span className="block opacity-70">Entry Price</span>
+                  <span className="block opacity-70">Volume (%)</span>
                   <span className="font-semibold text-gray-800">
-                    {trade.entryPrice}
+                  {trade.outcome === "profit" ? (
+                      <span className="font-semibold text-">
+                       % +{trade.tpPercentage}
+                      </span>
+                    ) : (
+                      <span className="ffont-semibold text-gray-800">
+                       % -{trade.slPercentage}
+                      </span>
+                    )}
                   </span>
                 </div>
                 <div>
