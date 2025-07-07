@@ -82,9 +82,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
-        {/* DÜZELTME: İçerik alanı, ekran yüksekliğinin %70'ini geçemez.
-          Geçerse, kendi içinde kaydırılabilir olur.
-        */}
         <div className="p-6 space-y-6 overflow-y-auto max-h-[70vh]">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2 items-center">
@@ -114,9 +111,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <TrashIcon className="h-5 w-5 mr-2 text-red-500" />
               Danger Zone
             </h3>
-            {/* DÜZELTME: Bu bölüm mobil cihazlarda daha iyi görünmesi için
-              esnek hale getirildi (dikeyden yataya geçiş).
-            */}
+
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <p className="text-sm text-red-800 flex-1">
                 This will permanently delete all trade history.

@@ -12,18 +12,11 @@ export const LeverageSelector: React.FC<LeverageSelectorProps> = ({
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newLeverage = parseInt(event.target.value, 10);
 
-    // Ana bileşendeki durumu her zaman güncelle
     onLeverageChange(newLeverage);
 
-    // --- YENİ EKLENEN TİTREŞİM MANTIĞI ---
-
-    // Sadece kaldıraç değeri değiştiğinde (her adımda bir kez) titreşim gönder
-    // ve tarayıcının bu özelliği desteklediğinden emin ol.
     if (newLeverage !== selectedLeverage && navigator.vibrate) {
-      // Çok kısa bir titreşim (10-20 milisaniye) "tırtıklı" hissi için idealdir.
       navigator.vibrate(15);
     }
-    // ------------------------------------
   };
 
   return (

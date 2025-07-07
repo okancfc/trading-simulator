@@ -28,9 +28,7 @@ export const TradeCard: React.FC<TradeCardProps> = ({
     <div className="bg-white rounded-xl shadow-lg p-5 border-l-4 border-blue-500">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h4 className="text-lg font-semibold text-gray-800">
-            {trade.pair}
-          </h4>
+          <h4 className="text-lg font-semibold text-gray-800">{trade.pair}</h4>
           <p className="text-xs text-gray-500">
             {trade.timestamp.toLocaleString()}
           </p>
@@ -43,10 +41,6 @@ export const TradeCard: React.FC<TradeCardProps> = ({
         </div>
       </div>
 
-      {/*
-        DÜZELTME: Bu grid varsayılan olarak tek sütun (mobil),
-        geniş ekranlarda iki sütun olacak şekilde güncellendi (`sm:grid-cols-2`).
-      */}
       <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
         <div>
           <p className="text-sm text-gray-600">Leverage</p>
@@ -57,7 +51,7 @@ export const TradeCard: React.FC<TradeCardProps> = ({
           <p className="font-semibold">{formatCurrency(trade.positionSize)}</p>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <button
           onClick={handleTakeProfit}

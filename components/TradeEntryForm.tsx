@@ -14,25 +14,6 @@ interface TradeEntryFormProps {
   setSelectedLeverage: (leverage: number) => void;
 }
 
-// O anki piyasa fiyatını simüle etmek için basit bir fonksiyon.
-// Gerçek bir uygulamada burası bir API'den gelen veriyi kullanırdı.
-const getSimulatedCurrentPrice = (pair: string) => {
-  // Parite isminden deterministik ama rastgele görünen bir sayı üretelim
-  let hash = 0;
-  for (let i = 0; i < pair.length; i++) {
-    const char = pair.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0; // 32bit integer'a çevir
-  }
-  
-  const basePrice = (Math.abs(hash) % 40000) + 1000; // 1,000 ile 41,000 arası bir baz fiyat
-  const fluctuation = Math.random() * 100 - 50; // +/- 50 dalgalanma
-  
-  // Fiyatı daha gerçekçi göstermek için ondalık bırakalım
-  return parseFloat((basePrice + fluctuation).toFixed(2));
-};
-
-
 export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
   leverage,
   availableBalance,
@@ -41,7 +22,6 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
 }) => {
   const [entryAmount, setEntryAmount] = useState("");
   const [pair, setPair] = useState("");
-  // Fiyat state'leri kaldırıldı, yerine yüzde state'leri geldi
   const [tpPercentage, setTpPercentage] = useState("");
   const [slPercentage, setSlPercentage] = useState("");
 
@@ -64,12 +44,6 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
       alert("Please enter valid and complete trade values.");
       return;
     }
-    
-    // YENİ MANTIK: Fiyatları simüle et ve hesapla
-    const entryPrice = getSimulatedCurrentPrice(pair);
-    const tpPrice = entryPrice * (1 + tpPercent / 100);
-    const slPrice = entryPrice * (1 - slPercent / 100);
-
 
     const trade: Trade = {
       id: generateTradeId(),
@@ -77,9 +51,6 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
       entryAmount: amount,
       leverage,
       positionSize: calculatePositionSize(amount, leverage),
-      entryPrice: entryPrice,
-      tpPrice: parseFloat(tpPrice.toFixed(4)), // Fiyatları hassas ama makul ondalıkta tut
-      slPrice: parseFloat(slPrice.toFixed(4)),
       tpPercentage: tpPercent,
       slPercentage: slPercent,
       timestamp: new Date(),
@@ -88,7 +59,6 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
 
     onTradePlaced(trade);
 
-    // Formu sıfırla
     setEntryAmount("");
     setTpPercentage("");
     setSlPercentage("");
@@ -133,7 +103,6 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
           />
         </div>
 
-        {/* Fiyat inputları kaldırıldı, yerine yüzde inputları geldi */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -143,7 +112,7 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
               type="number"
               value={tpPercentage}
               onChange={(e) => setTpPercentage(e.target.value)}
-              step="0.001" // 0.XX ondalık hassasiyeti için
+              step="0.001"
               min="0"
               placeholder="e.g. 1.25"
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -158,7 +127,7 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
               type="number"
               value={slPercentage}
               onChange={(e) => setSlPercentage(e.target.value)}
-              step="0.001" // 0.XX ondalık hassasiyeti için
+              step="0.001"
               min="0"
               placeholder="e.g. 0.80"
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"

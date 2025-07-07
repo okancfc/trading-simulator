@@ -127,7 +127,9 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
         </div>
 
         {groupedData.length === 0 ? (
-          <p className="flex justify-center text-sm text-gray-500 py-20">No data available.</p>
+          <p className="flex justify-center text-sm text-gray-500 py-20">
+            No data available.
+          </p>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={groupedData}>

@@ -4,9 +4,6 @@ export interface Trade {
   entryAmount: number;
   leverage: number;
   positionSize: number;
-  entryPrice: number;
-  tpPrice: number;
-  slPrice: number;
   tpPercentage: number;
   slPercentage: number;
   timestamp: Date;

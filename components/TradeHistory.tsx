@@ -49,7 +49,9 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                         ✅ Profit
                       </span>
                     ) : (
-                      <span className="font-semibold text-red-600">❌ Loss</span>
+                      <span className="font-semibold text-red-600">
+                        ❌ Loss
+                      </span>
                     )}
                   </p>
                   <p
@@ -78,13 +80,13 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                 <div>
                   <span className="block opacity-70">Volume (%)</span>
                   <span className="font-semibold text-gray-800">
-                  {trade.outcome === "profit" ? (
+                    {trade.outcome === "profit" ? (
                       <span className="font-semibold text-">
-                       % +{trade.tpPercentage}
+                        % +{trade.tpPercentage}
                       </span>
                     ) : (
                       <span className="ffont-semibold text-gray-800">
-                       % -{trade.slPercentage}
+                        % -{trade.slPercentage}
                       </span>
                     )}
                   </span>

@@ -75,20 +75,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen overflow-y-auto scrollbar-hide bg-gray-50 pt-32 md:pt-24">
-      {/*
-        ===================================================================
-        RESPONSIVE HEADER DÜZENLEMESİ
-        ===================================================================
-      */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-4">
-          
-          {/*
-            ============================================================
-            1. MASAÜSTÜ İÇİN HEADER (Eski, Tek Satırlı Hali)
-            - `hidden md:flex` ile sadece orta ve büyük ekranlarda görünür.
-            ============================================================
-          */}
           <div className="hidden md:flex justify-between items-center h-20">
             <div className="flex-1 flex justify-start">
               <button
@@ -102,15 +90,14 @@ export default function Home() {
 
             <div className="flex-shrink-0">
               <div className="relative flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
-                {/* Sliding Background */}
-                <div 
+                <div
                   className="absolute top-1.5 bg-white rounded-full shadow-lg transition-all duration-300 ease-out"
                   style={{
                     left: `${activeIndex * (100 / 3)}%`,
-                    height: 'calc(100% - 0.75rem)',
-                    marginLeft: '0.375rem',
-                    marginRight: '0.375rem',
-                    width: 'calc(33.333% - 0.75rem)'
+                    height: "calc(100% - 0.75rem)",
+                    marginLeft: "0.375rem",
+                    marginRight: "0.375rem",
+                    width: "calc(33.333% - 0.75rem)",
                   }}
                 />
                 {TABS.map((tab, index) => (
@@ -133,13 +120,6 @@ export default function Home() {
               <BalanceDisplay balance={balance} lockedAmount={lockedAmount} />
             </div>
           </div>
-
-          {/*
-            ============================================================
-            2. MOBİL İÇİN HEADER (Yeni, İki Satırlı Hali)
-            - `flex md:hidden` ile sadece küçük ekranlarda görünür.
-            ============================================================
-          */}
           <div className="flex flex-col md:hidden py-3">
             <div className="w-full flex justify-between items-center">
               <div className="flex-1 flex justify-start">
@@ -159,14 +139,14 @@ export default function Home() {
             <div className="flex-shrink-0 mt-2">
               <div className="relative flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
                 {/* Sliding Background for Mobile */}
-                <div 
+                <div
                   className="absolute top-1.5 bg-white rounded-full shadow-lg transition-all duration-300 ease-out"
                   style={{
                     left: `${activeIndex * (100 / 3)}%`,
-                    height: 'calc(100% - 0.75rem)',
-                    marginLeft: '0.375rem',
-                    marginRight: '0.375rem',
-                    width: 'calc(33.333% - 0.75rem)'
+                    height: "calc(100% - 0.75rem)",
+                    marginLeft: "0.375rem",
+                    marginRight: "0.375rem",
+                    width: "calc(33.333% - 0.75rem)",
                   }}
                 />
                 {TABS.map((tab, index) => (
@@ -185,20 +165,13 @@ export default function Home() {
               </div>
             </div>
           </div>
-          
         </div>
       </header>
 
-      {/* Sayfa içeriği */}
       <div className="container mx-auto px-4">
         <div className="max-w-xl mx-auto">
-          {/*
-            DÜZELTME: Sabit yükseklik (h-[...]) kaldırıldı.
-            Artık yükseklik, içindeki slaytlar tarafından belirlenecek.
-          */}
           <div className="mt-2">
             <Swiper
-              // DÜZELTME: autoHeight kaldırıldı.
               onSwiper={setSwiperInstance}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               modules={[Pagination]}
@@ -228,7 +201,7 @@ export default function Home() {
 
         <div className="max-w-6xl mx-auto mt-12 pb-12">
           <h3 className="text-xl font-bold text-gray-800 mb-4 px-2">
-           🍄 Open Trades ({openTrades.length})
+            🍄 Open Trades ({openTrades.length})
           </h3>
           {openTrades.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
