@@ -47,6 +47,11 @@ This is not a financial tool. It’s a **personal side project** created to:
 
 ---
 
+## 📝 Disclaimer
+This is not investment advice. It’s a frontend-only simulator for educational purposes.
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Next.js** (Frontend framework)
@@ -60,14 +65,11 @@ This is not a financial tool. It’s a **personal side project** created to:
 ## 📦 How to Run Locally
 
 ```bash
-git clone https://github.com/yourusername/trading-simulator.git
+git clone https://github.com/okancfc/trading-simulator
 cd trading-simulator
 npm install
 npm run dev
 Then open http://localhost:3000
-
-📝 Disclaimer
-This is not investment advice. It’s a frontend-only simulator for educational purposes.
 
 
 
