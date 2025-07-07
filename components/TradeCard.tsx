@@ -64,7 +64,7 @@ export const TradeCard: React.FC<TradeCardProps> = ({
           className="text-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors w-full"
         >
           <p className="text-sm text-green-700">
-            TP ({trade.tpPercentage.toFixed(1)}%)
+            TP ({trade.tpPercentage.toFixed(2)}%)
           </p>
           <p className="text-lg font-bold text-green-600">
             +{formatCurrency(potentialProfit)}
@@ -75,7 +75,7 @@ export const TradeCard: React.FC<TradeCardProps> = ({
           className="text-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors w-full"
         >
           <p className="text-sm text-red-700">
-            SL ({trade.slPercentage.toFixed(1)}%)
+            SL ({trade.slPercentage.toFixed(2)}%)
           </p>
           <p className="text-lg font-bold text-red-600">
             -{formatCurrency(potentialLoss)}
