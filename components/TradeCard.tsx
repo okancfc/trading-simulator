@@ -56,20 +56,8 @@ export const TradeCard: React.FC<TradeCardProps> = ({
           <p className="text-sm text-gray-600">Pos. Size</p>
           <p className="font-semibold">{formatCurrency(trade.positionSize)}</p>
         </div>
-        <div>
-          <p className="text-sm text-gray-600">TP Price</p>
-          <p className="font-semibold text-green-600">{trade.tpPrice}</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-600">SL Price</p>
-          <p className="font-semibold text-red-600">{trade.slPrice}</p>
-        </div>
       </div>
-
-      {/*
-        DÜZELTME: Butonlar da mobil cihazlarda daha iyi görünmesi için
-        tek sütundan başlayacak şekilde ayarlandı.
-      */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <button
           onClick={handleTakeProfit}
