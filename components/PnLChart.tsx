@@ -20,7 +20,9 @@ export const PnLChart: React.FC<PnLChartProps> = ({ trades }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>("daily");
 
   const formatDate = (date: Date, type: TimeFrame) => {
-    if (type === "daily") return date.toLocaleDateString();
+    if (type === "daily") {
+      return date.toLocaleDateString();
+    }
     if (type === "weekly") {
       const week = getWeekNumber(date);
       return `${date.getFullYear()} - W${week}`;
@@ -46,7 +48,9 @@ export const PnLChart: React.FC<PnLChartProps> = ({ trades }) => {
       const key = formatDate(new Date(trade.closeTimestamp), timeframe);
       map.set(key, (map.get(key) || 0) + trade.pnl);
     });
-    return Array.from(map.entries()).map(([date, pnl]) => ({ date, pnl }));
+    return Array.from(map.entries())
+      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+      .map(([date, pnl]) => ({ date, pnl }));
   }, [trades, timeframe]);
 
   return (

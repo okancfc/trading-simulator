@@ -37,7 +37,9 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>("daily");
 
   const formatDate = (date: Date, type: TimeFrame) => {
-    if (type === "daily") return date.toLocaleDateString();
+    if (type === "daily") {
+      return date.toLocaleDateString();
+    }
     if (type === "weekly") {
       const week = getWeekNumber(date);
       return `${date.getFullYear()} - W${week}`;
@@ -63,7 +65,9 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
       const key = formatDate(new Date(trade.closeTimestamp), timeframe);
       map.set(key, (map.get(key) || 0) + trade.pnl);
     });
-    return Array.from(map.entries()).map(([date, pnl]) => ({ date, pnl }));
+    return Array.from(map.entries())
+      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+      .map(([date, pnl]) => ({ date, pnl }));
   }, [trades, timeframe]);
 
   return (
@@ -134,7 +138,13 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={groupedData}>
               <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-              <XAxis dataKey="date" />
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: 10 }}
+                angle={-30}
+                textAnchor="end"
+                interval="preserveStartEnd"
+              />
               <YAxis />
               <Tooltip />
               <Line
