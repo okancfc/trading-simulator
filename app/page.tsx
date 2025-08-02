@@ -74,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto scrollbar-hide bg-gray-50 pt-32 md:pt-24">
+    <div className="min-h-screen overflow-y-auto scrollbar-hide overscroll-none bg-gray-50 pt-32 md:pt-24" style={{ WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-4">
           <div className="hidden md:flex justify-between items-center h-20">
@@ -177,7 +177,7 @@ export default function Home() {
               modules={[Pagination]}
               slidesPerView={1}
               pagination={{ clickable: true }}
-              className="w-full"
+              className="w-full scrollbar-hide"
               speed={300}
             >
               {[
