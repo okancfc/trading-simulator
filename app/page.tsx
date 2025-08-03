@@ -74,24 +74,24 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto scrollbar-hide overscroll-none bg-gray-50 pt-32 md:pt-24" style={{ WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+    <div className="min-h-screen overflow-y-auto scrollbar-hide overscroll-none bg-gray-50 dark:bg-gray-900 pt-32 md:pt-24 transition-colors duration-300" style={{ WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-800/90 backdrop-blur-md shadow-sm transition-colors duration-300">
         <div className="container mx-auto px-4">
           <div className="hidden md:flex justify-between items-center h-20">
-            <div className="flex-1 flex justify-start">
+            <div className="flex-1 flex justify-start gap-2">
               <button
                 onClick={() => setIsSettingsOpen(true)}
-                className="p-2 rounded-full hover:bg-gray-200 transition-all duration-200 hover:scale-110 active:scale-95 group"
-                aria-label="Ayarlar"
+                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110 active:scale-95 group"
+                aria-label="Settings"
               >
-                <Cog6ToothIcon className="h-6 w-6 text-gray-700 transition-transform duration-200 group-hover:rotate-90" />
+                <Cog6ToothIcon className="h-6 w-6 text-gray-700 dark:text-gray-200 transition-transform duration-200 group-hover:rotate-90" />
               </button>
             </div>
 
             <div className="flex-shrink-0">
-              <div className="relative flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+              <div className="relative flex justify-center items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full p-1.5 shadow-inner transition-colors duration-300">
                 <div
-                  className="absolute top-1.5 bg-white rounded-full shadow-lg transition-all duration-300 ease-out"
+                  className="absolute top-1.5 bg-white dark:bg-gray-600 rounded-full shadow-lg transition-all duration-300 ease-out"
                   style={{
                     left: `${activeIndex * (100 / 3)}%`,
                     height: "calc(100% - 0.75rem)",
@@ -106,8 +106,8 @@ export default function Home() {
                     onClick={() => handleTabClick(index)}
                     className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 ${
                       activeIndex === index
-                        ? "text-blue-600 scale-105"
-                        : "text-gray-500 hover:text-blue-600"
+                        ? "text-blue-600 dark:text-blue-400 scale-105"
+                        : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
                     }`}
                   >
                     <span className="relative z-10">{tab.title}</span>
@@ -122,13 +122,13 @@ export default function Home() {
           </div>
           <div className="flex flex-col md:hidden py-3">
             <div className="w-full flex justify-between items-center">
-              <div className="flex-1 flex justify-start">
+              <div className="flex-1 flex justify-start gap-2">
                 <button
                   onClick={() => setIsSettingsOpen(true)}
-                  className="p-2 rounded-full hover:bg-gray-200 transition-all duration-200 hover:scale-110 active:scale-95 group"
-                  aria-label="Ayarlar"
+                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110 active:scale-95 group"
+                  aria-label="Settings"
                 >
-                  <Cog6ToothIcon className="h-6 w-6 text-gray-700 transition-transform duration-200 group-hover:rotate-90" />
+                  <Cog6ToothIcon className="h-6 w-6 text-gray-700 dark:text-gray-200 transition-transform duration-200 group-hover:rotate-90" />
                 </button>
               </div>
               <div className="flex-1 flex justify-end">
@@ -137,10 +137,10 @@ export default function Home() {
             </div>
 
             <div className="flex-shrink-0 mt-2">
-              <div className="relative flex justify-center items-center gap-2 bg-gray-100 rounded-full p-1.5 shadow-inner">
+              <div className="relative flex justify-center items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full p-1.5 shadow-inner transition-colors duration-300">
                 {/* Sliding Background for Mobile */}
                 <div
-                  className="absolute top-1.5 bg-white rounded-full shadow-lg transition-all duration-300 ease-out"
+                  className="absolute top-1.5 bg-white dark:bg-gray-600 rounded-full shadow-lg transition-all duration-300 ease-out"
                   style={{
                     left: `${activeIndex * (100 / 3)}%`,
                     height: "calc(100% - 0.75rem)",
@@ -155,8 +155,8 @@ export default function Home() {
                     onClick={() => handleTabClick(index)}
                     className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 active:scale-95 ${
                       activeIndex === index
-                        ? "text-blue-600 scale-105"
-                        : "text-gray-500 hover:text-blue-600"
+                        ? "text-blue-600 dark:text-blue-400 scale-105"
+                        : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
                     }`}
                   >
                     <span className="relative z-10">{tab.title}</span>
@@ -200,7 +200,7 @@ export default function Home() {
         </div>
 
         <div className="max-w-6xl mx-auto mt-12 pb-12">
-          <h3 className="text-xl font-bold text-gray-800 mb-4 px-2">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4 px-2 transition-colors duration-300">
             🍄 Open Trades ({openTrades.length})
           </h3>
           {openTrades.length > 0 ? (
@@ -215,7 +215,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center text-gray-500">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center text-gray-500 dark:text-gray-400 transition-colors duration-300">
               No open trades.
             </div>
           )}

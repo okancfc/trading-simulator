@@ -71,18 +71,18 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
   }, [trades, timeframe]);
 
   return (
-    <div className="bg-white rounded-lg p-6 mb-8 shadow-md min-h-[550px]">
-      <h3 className="text-xl font-semibold text-gray-800 mb-4">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 mb-8 shadow-md min-h-[550px] transition-colors duration-200">
+      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
         📊 Performance Stats
       </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6 text-gray-700 dark:text-gray-300">
         <div className="flex justify-between">
           <span>Total Trades</span>
-          <span className="font-semibold">{trades.length}</span>
+          <span className="font-semibold dark:text-gray-200">{trades.length}</span>
         </div>
         <div className="flex justify-between">
           <span>Win Rate</span>
-          <span className="font-semibold">{winRate.toFixed(1)}%</span>
+          <span className="font-semibold dark:text-gray-200">{winRate.toFixed(1)}%</span>
         </div>
         <div className="flex justify-between">
           <span>Total P&L</span>
@@ -118,40 +118,69 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
 
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h4 className="text-md font-semibold text-gray-800">📈 P&L Trend</h4>
-          <select
-            value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value as TimeFrame)}
-            className="px-2 py-1 border border-gray-300 rounded-md text-sm"
-          >
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
+          <h4 className="text-md font-semibold text-gray-800 dark:text-gray-100">📈 P&L Trend</h4>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setTimeframe("daily")}
+              className={`px-4 py-1.5 rounded-md text-sm transition-colors ${timeframe === "daily" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+            >
+              Daily
+            </button>
+            <button
+              onClick={() => setTimeframe("weekly")}
+              className={`px-4 py-1.5 rounded-md text-sm transition-colors ${timeframe === "weekly" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+            >
+              Weekly
+            </button>
+            <button
+              onClick={() => setTimeframe("monthly")}
+              className={`px-4 py-1.5 rounded-md text-sm transition-colors ${timeframe === "monthly" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+            >
+              Monthly
+            </button>
+          </div>
         </div>
 
-        {groupedData.length === 0 ? (
-          <p className="flex justify-center text-sm text-gray-500 py-20">
+        {trades.length < 2 ? (
+          <div className="flex flex-col items-center justify-center p-8 text-gray-500 dark:text-gray-400 mt-12">
+            <div className="text-4xl mb-3">📈</div>
+            <p>Need more trade data for charts.</p>
+            <p className="text-sm mt-1">Close at least 2 trades to see charts.</p>
+          </div>
+        ) : groupedData.length === 0 ? (
+          <p className="flex justify-center text-sm text-gray-500 dark:text-gray-400 py-20">
             No data available.
           </p>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={groupedData}>
-              <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+              <CartesianGrid stroke="#ccc" strokeDasharray="5 5" opacity={0.7} />
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 10 }}
+                tick={{ fontSize: 10, fill: 'var(--text-primary, #333)' }}
                 angle={-30}
                 textAnchor="end"
                 interval="preserveStartEnd"
+                stroke="var(--border-subtle, #ddd)"
               />
-              <YAxis />
-              <Tooltip />
+              <YAxis 
+                tick={{ fill: 'var(--text-primary, #333)' }}
+                stroke="var(--border-subtle, #ddd)"
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'var(--bg-surface, white)',
+                  borderColor: 'var(--border-subtle, #ddd)',
+                  color: 'var(--text-primary, #333)'
+                }}
+              />
               <Line
                 type="monotone"
                 dataKey="pnl"
-                stroke="#4ade80"
+                stroke="var(--color-accent, #4ade80)"
                 strokeWidth={2}
+                dot={{ r: 4, strokeWidth: 1 }}
+                activeDot={{ r: 6, strokeWidth: 0 }}
               />
             </LineChart>
           </ResponsiveContainer>

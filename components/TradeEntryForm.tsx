@@ -69,13 +69,13 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
   const positionSize = calculatePositionSize(amountNum, leverage);
 
   return (
-    <div className="bg-white rounded-lg p-5 shadow-md">
-      <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-4 border-b">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md transition-colors duration-200">
+      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 pb-4 border-b dark:border-gray-700 transition-colors duration-200">
         🎯 Place Trade
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4 pt-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Trading Pair
           </label>
           <input
@@ -83,13 +83,13 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
             value={pair}
             onChange={(e) => setPair(e.target.value)}
             placeholder="e.g. BTC/USDT"
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 transition-colors duration-200"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Amount ($)
           </label>
           <input
@@ -98,39 +98,38 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
             onChange={(e) => setEntryAmount(e.target.value)}
             min="0"
             step="0.01"
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 transition-colors duration-200"
             required
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Take Profit (%)
             </label>
             <input
               type="number"
               value={tpPercentage}
               onChange={(e) => setTpPercentage(e.target.value)}
-              step="0.001"
-              min="0"
-              placeholder="e.g. 1.25"
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              min="0.1"
+              step="0.1"
+              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 transition-colors duration-200"
               required
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Stop Loss (%)
             </label>
             <input
               type="number"
               value={slPercentage}
               onChange={(e) => setSlPercentage(e.target.value)}
-              step="0.001"
-              min="0"
-              placeholder="e.g. 0.80"
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              min="0.1"
+              step="0.1"
+              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 transition-colors duration-200"
               required
             />
           </div>
@@ -141,18 +140,18 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
           onLeverageChange={setSelectedLeverage}
         />
 
-        <div className="bg-gray-50 p-3 rounded-lg border">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Position Size:</span>
-            <span className="font-semibold text-blue-600">
+        <div className="mt-6 border-t pt-4 border-gray-100 dark:border-gray-700 space-y-3 transition-colors duration-200">
+          <div className="flex justify-between items-center">
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Position Size</div>
+            <div className="font-semibold text-gray-800 dark:text-gray-100">
               {formatCurrency(positionSize)}
-            </span>
+            </div>
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold rounded-lg transition-colors duration-200"
         >
           Place Trade
         </button>
