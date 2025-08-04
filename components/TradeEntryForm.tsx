@@ -112,8 +112,8 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
               type="number"
               value={tpPercentage}
               onChange={(e) => setTpPercentage(e.target.value)}
-              min="0.1"
-              step="0.1"
+              min="0.01"
+              step="0.01"
               className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 transition-colors duration-200"
               required
             />
@@ -127,8 +127,8 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
               type="number"
               value={slPercentage}
               onChange={(e) => setSlPercentage(e.target.value)}
-              min="0.1"
-              step="0.1"
+              min="0.01"
+              step="0.01"
               className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 transition-colors duration-200"
               required
             />
