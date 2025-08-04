@@ -191,7 +191,7 @@ export default function Home() {
                 <TradeHistory key="history" trades={closedTrades} />,
                 <StatsPanel key="stats" trades={closedTrades} />,
               ].map((component, index) => (
-                <SwiperSlide key={index} className="p-2 pb-10">
+                <SwiperSlide key={index} className="p-2 pb-2">
                   {component}
                 </SwiperSlide>
               ))}
