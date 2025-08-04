@@ -94,47 +94,27 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ trades }) => {
             {formatCurrency(totalPnL)}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span>Last 7 Days P&L</span>
-          <span
-            className={`font-semibold ${
-              pnl7Days >= 0 ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {formatCurrency(pnl7Days)}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span>Last 30 Days P&L</span>
-          <span
-            className={`font-semibold ${
-              pnl30Days >= 0 ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {formatCurrency(pnl30Days)}
-          </span>
-        </div>
       </div>
 
       <div>
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mt-10 mb-4">
           <h4 className="text-md font-semibold text-gray-800 dark:text-gray-100">📈 P&L Trend</h4>
           <div className="flex gap-3">
             <button
               onClick={() => setTimeframe("daily")}
-              className={`px-4 py-1.5 rounded-md text-sm transition-colors ${timeframe === "daily" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+              className={`px-3 py-1.5 rounded-md text-sm transition-colors ${timeframe === "daily" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
             >
               Daily
             </button>
             <button
               onClick={() => setTimeframe("weekly")}
-              className={`px-4 py-1.5 rounded-md text-sm transition-colors ${timeframe === "weekly" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+              className={`px-3 py-1.5 rounded-md text-sm transition-colors ${timeframe === "weekly" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
             >
               Weekly
             </button>
             <button
               onClick={() => setTimeframe("monthly")}
-              className={`px-4 py-1.5 rounded-md text-sm transition-colors ${timeframe === "monthly" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+              className={`px-3 py-1.5 rounded-md text-sm transition-colors ${timeframe === "monthly" ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
             >
               Monthly
             </button>

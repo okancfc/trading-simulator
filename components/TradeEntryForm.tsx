@@ -151,7 +151,7 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
 
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold rounded-lg transition-colors duration-200"
+          className="w-full py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold rounded-lg transition-colors duration-200"
         >
           Place Trade
         </button>
