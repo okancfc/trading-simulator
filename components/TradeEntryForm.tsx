@@ -3,6 +3,7 @@ import {
   formatCurrency,
   calculatePositionSize,
   generateTradeId,
+  calculateTradingFee,
 } from "../lib/utils";
 import type { Trade } from "../lib/types";
 import { LeverageSelector } from "./LeverageSelector";
@@ -12,6 +13,8 @@ interface TradeEntryFormProps {
   availableBalance: number;
   onTradePlaced: (trade: Trade) => void;
   setSelectedLeverage: (leverage: number) => void;
+  makerFee: number;
+  takerFee: number;
 }
 
 export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
@@ -19,6 +22,8 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
   availableBalance,
   onTradePlaced,
   setSelectedLeverage,
+  makerFee,
+  takerFee,
 }) => {
   const [entryAmount, setEntryAmount] = useState("");
   const [pair, setPair] = useState("");
@@ -45,16 +50,20 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
       return;
     }
 
+    const positionSize = calculatePositionSize(amount, leverage);
+    const fee = calculateTradingFee(positionSize, makerFee, takerFee);
+
     const trade: Trade = {
       id: generateTradeId(),
       pair: pair.trim().toUpperCase(),
       entryAmount: amount,
       leverage,
-      positionSize: calculatePositionSize(amount, leverage),
+      positionSize,
       tpPercentage: tpPercent,
       slPercentage: slPercent,
       timestamp: new Date(),
       status: "open",
+      fee,
     };
 
     onTradePlaced(trade);
@@ -67,6 +76,8 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
 
   const amountNum = parseFloat(entryAmount) || 0;
   const positionSize = calculatePositionSize(amountNum, leverage);
+  const estimatedFee = calculateTradingFee(positionSize, makerFee, takerFee);
+  const totalFeePercentage = makerFee + takerFee;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md transition-colors duration-200">
@@ -146,6 +157,17 @@ export const TradeEntryForm: React.FC<TradeEntryFormProps> = ({
             <div className="font-semibold text-gray-800 dark:text-gray-100">
               {formatCurrency(positionSize)}
             </div>
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              Estimated Fee ({totalFeePercentage.toFixed(4)}%)
+            </div>
+            <div className="font-semibold text-orange-500 dark:text-orange-400">
+              {formatCurrency(estimatedFee)}
+            </div>
+          </div>
+          <div className="flex justify-between items-center text-xs text-gray-400 dark:text-gray-500">
+            <div>Maker: {makerFee.toFixed(4)}% | Taker: {takerFee.toFixed(4)}%</div>
           </div>
         </div>
 

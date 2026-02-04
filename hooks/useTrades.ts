@@ -19,15 +19,20 @@ export const useTrades = () => {
   const closeTrade = (
     tradeId: string,
     outcome: "profit" | "loss",
-    pnl: number
+    grossPnl: number,
+    fee: number
   ) => {
     const trade = openTrades.find((t) => t.id === tradeId);
     if (!trade) return;
 
+    // Calculate net PnL: for profit, fee is deducted; for loss, fee adds to the loss
+    const netPnl = outcome === "profit" ? grossPnl - fee : grossPnl - fee;
+
     const closedTrade: ClosedTrade = {
       ...trade,
       outcome,
-      pnl,
+      pnl: netPnl,
+      grossPnl,
       status: "closed",
       closeTimestamp: new Date(),
     };

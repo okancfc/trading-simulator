@@ -54,14 +54,18 @@ export default function Home() {
     addTrade(trade);
   };
 
-  const handleTakeProfit = (tradeId: string, pnl: number) => {
-    updateBalance(pnl);
-    closeTrade(tradeId, "profit", pnl);
+  const handleTakeProfit = (tradeId: string, grossPnl: number, fee: number) => {
+    // Net profit = gross profit - fee
+    const netPnl = grossPnl - fee;
+    updateBalance(netPnl);
+    closeTrade(tradeId, "profit", grossPnl, fee);
   };
 
-  const handleStopLoss = (tradeId: string, pnl: number) => {
-    updateBalance(pnl);
-    closeTrade(tradeId, "loss", pnl);
+  const handleStopLoss = (tradeId: string, grossPnl: number, fee: number) => {
+    // Net loss = gross loss - fee (fee makes loss bigger)
+    const netPnl = grossPnl - fee;
+    updateBalance(netPnl);
+    closeTrade(tradeId, "loss", grossPnl, fee);
   };
 
   const handleClearHistory = () => {
@@ -74,7 +78,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto scrollbar-hide overscroll-none bg-gray-50 dark:bg-gray-900 pt-32 md:pt-24 transition-colors duration-300" style={{ WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-32 md:pt-24 pb-8 transition-colors duration-300">
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-800/90 backdrop-blur-md shadow-sm transition-colors duration-300">
         <div className="container mx-auto px-4">
           <div className="hidden md:flex justify-between items-center h-20">
@@ -104,11 +108,10 @@ export default function Home() {
                   <button
                     key={tab.id}
                     onClick={() => handleTabClick(index)}
-                    className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 ${
-                      activeIndex === index
-                        ? "text-blue-600 dark:text-blue-400 scale-105"
-                        : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
-                    }`}
+                    className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 ${activeIndex === index
+                      ? "text-blue-600 dark:text-blue-400 scale-105"
+                      : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                      }`}
                   >
                     <span className="relative z-10">{tab.title}</span>
                   </button>
@@ -153,11 +156,10 @@ export default function Home() {
                   <button
                     key={tab.id}
                     onClick={() => handleTabClick(index)}
-                    className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 active:scale-95 ${
-                      activeIndex === index
-                        ? "text-blue-600 dark:text-blue-400 scale-105"
-                        : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
-                    }`}
+                    className={`relative z-10 py-2 px-5 font-semibold text-center transition-all duration-300 ease-out w-full text-sm rounded-full transform hover:scale-105 active:scale-95 ${activeIndex === index
+                      ? "text-blue-600 dark:text-blue-400 scale-105"
+                      : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                      }`}
                   >
                     <span className="relative z-10">{tab.title}</span>
                   </button>
@@ -187,6 +189,8 @@ export default function Home() {
                   leverage={selectedLeverage}
                   availableBalance={availableBalance}
                   onTradePlaced={handleTradePlaced}
+                  makerFee={settings.makerFee}
+                  takerFee={settings.takerFee}
                 />,
                 <TradeHistory key="history" trades={closedTrades} />,
                 <StatsPanel key="stats" trades={closedTrades} />,

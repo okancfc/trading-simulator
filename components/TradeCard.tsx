@@ -4,8 +4,8 @@ import type { Trade } from "../lib/types";
 
 interface TradeCardProps {
   trade: Trade;
-  onTakeProfit: (tradeId: string, pnl: number) => void;
-  onStopLoss: (tradeId: string, pnl: number) => void;
+  onTakeProfit: (tradeId: string, grossPnl: number, fee: number) => void;
+  onStopLoss: (tradeId: string, grossPnl: number, fee: number) => void;
 }
 
 export const TradeCard: React.FC<TradeCardProps> = ({
@@ -16,12 +16,16 @@ export const TradeCard: React.FC<TradeCardProps> = ({
   const potentialProfit = (trade.positionSize * trade.tpPercentage) / 100;
   const potentialLoss = (trade.positionSize * trade.slPercentage) / 100;
 
+  // Net values after fee deduction
+  const netProfit = potentialProfit - trade.fee;
+  const netLoss = potentialLoss + trade.fee; // Fee adds to loss
+
   const handleTakeProfit = () => {
-    onTakeProfit(trade.id, potentialProfit);
+    onTakeProfit(trade.id, potentialProfit, trade.fee);
   };
 
   const handleStopLoss = () => {
-    onStopLoss(trade.id, -potentialLoss);
+    onStopLoss(trade.id, -potentialLoss, trade.fee);
   };
 
   return (
@@ -41,7 +45,7 @@ export const TradeCard: React.FC<TradeCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors duration-200">
+      <div className="grid grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors duration-200">
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Leverage</p>
           <p className="font-semibold dark:text-gray-200">{trade.leverage}x</p>
@@ -49,6 +53,10 @@ export const TradeCard: React.FC<TradeCardProps> = ({
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Pos. Size</p>
           <p className="font-semibold dark:text-gray-200">{formatCurrency(trade.positionSize)}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Fee</p>
+          <p className="font-semibold text-orange-500 dark:text-orange-400">{formatCurrency(trade.fee)}</p>
         </div>
       </div>
 
@@ -61,7 +69,10 @@ export const TradeCard: React.FC<TradeCardProps> = ({
             TP ({trade.tpPercentage.toFixed(2)}%)
           </p>
           <p className="text-lg font-bold text-green-600 dark:text-green-400">
-            +{formatCurrency(potentialProfit)}
+            +{formatCurrency(netProfit)}
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            (Gross: +{formatCurrency(potentialProfit)})
           </p>
         </button>
         <button
@@ -72,7 +83,10 @@ export const TradeCard: React.FC<TradeCardProps> = ({
             SL ({trade.slPercentage.toFixed(2)}%)
           </p>
           <p className="text-lg font-bold text-red-600 dark:text-red-400">
-            -{formatCurrency(potentialLoss)}
+            -{formatCurrency(netLoss)}
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            (Loss + Fee: -{formatCurrency(potentialLoss)} - {formatCurrency(trade.fee)})
           </p>
         </button>
       </div>

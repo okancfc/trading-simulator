@@ -55,20 +55,25 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                     )}
                   </p>
                   <p
-                    className={`text-lg font-bold ${
-                      trade.pnl >= 0 ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`text-lg font-bold ${trade.pnl >= 0 ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {formatCurrency(trade.pnl)}
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400 mt-3 pt-3 border-t dark:border-gray-700">
+              <div className="grid grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400 mt-3 pt-3 border-t dark:border-gray-700">
                 <div>
                   <span className="block opacity-70">Entry Amount</span>
                   <span className="font-semibold text-gray-800 dark:text-gray-200">
                     {formatCurrency(trade.entryAmount)}
+                  </span>
+                </div>
+                <div>
+                  <span className="block opacity-70">Position Size</span>
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
+                    {formatCurrency(trade.positionSize)}
                   </span>
                 </div>
                 <div>
@@ -92,9 +97,15 @@ export const TradeHistory: React.FC<TradeHistoryProps> = ({ trades }) => {
                   </span>
                 </div>
                 <div>
-                  <span className="block opacity-70">Position Size</span>
-                  <span className="font-semibold text-gray-800 dark:text-gray-200">
-                    {formatCurrency(trade.positionSize)}
+                  <span className="block opacity-70">Fee</span>
+                  <span className="font-semibold text-orange-500 dark:text-orange-400">
+                    {formatCurrency(trade.fee)}
+                  </span>
+                </div>
+                <div>
+                  <span className="block opacity-70">Gross PnL</span>
+                  <span className={`font-semibold ${trade.grossPnl >= 0 ? "text-green-600" : "text-red-600"}`}>
+                    {formatCurrency(trade.grossPnl)}
                   </span>
                 </div>
               </div>
