@@ -12,14 +12,73 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Helper function to safely check if we're on client side
+const isClient = typeof window !== "undefined";
+
+// Helper function to safely get system preference
+const getSystemTheme = (): "light" | "dark" => {
+  if (!isClient) return "light";
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  } catch {
+    return "light";
+  }
+};
+
+// Helper function to safely get localStorage
+const getSavedThemeMode = (): ThemeMode | null => {
+  if (!isClient) return null;
+  try {
+    return localStorage.getItem("themeMode") as ThemeMode | null;
+  } catch {
+    return null;
+  }
+};
+
+// Helper function to safely set localStorage
+const saveThemeMode = (mode: ThemeMode) => {
+  if (!isClient) return;
+  try {
+    localStorage.setItem("themeMode", mode);
+  } catch {
+    // localStorage might not be available
+  }
+};
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("light");
 
+  const updateDocumentClass = (theme: "light" | "dark") => {
+    if (!isClient) return;
+    try {
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } catch {
+      // document might not be available
+    }
+  };
+
+  // Set mounted to true after first render
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Handle system theme changes with a media query
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    
+    if (!mounted || !isClient) return;
+
+    let mediaQuery: MediaQueryList;
+    try {
+      mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    } catch {
+      return;
+    }
+
     const handleSystemThemeChange = (e: MediaQueryListEvent | MediaQueryList) => {
       if (themeMode === "system") {
         const newTheme = e.matches ? "dark" : "light";
@@ -30,49 +89,49 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     // Initial check
     handleSystemThemeChange(mediaQuery);
-    
+
     // Listen for changes
     mediaQuery.addEventListener("change", handleSystemThemeChange);
     return () => mediaQuery.removeEventListener("change", handleSystemThemeChange);
-  }, [themeMode]);
+  }, [themeMode, mounted]);
 
   // Load theme from localStorage on component mount
   useEffect(() => {
-    const savedThemeMode = localStorage.getItem("themeMode") as ThemeMode | null;
-    
+    if (!mounted || !isClient) return;
+
+    const savedThemeMode = getSavedThemeMode();
+
     // If user has previously set a preference, use that
     if (savedThemeMode) {
       setThemeMode(savedThemeMode);
-      
+
       if (savedThemeMode === "light" || savedThemeMode === "dark") {
         setCurrentTheme(savedThemeMode);
         updateDocumentClass(savedThemeMode);
       } else {
         // For system mode, detect the system preference
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const systemTheme = prefersDark ? "dark" : "light";
+        const systemTheme = getSystemTheme();
         setCurrentTheme(systemTheme);
         updateDocumentClass(systemTheme);
       }
     } else {
       // No saved preference, default to system theme
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const systemTheme = prefersDark ? "dark" : "light";
+      const systemTheme = getSystemTheme();
       setCurrentTheme(systemTheme);
       updateDocumentClass(systemTheme);
-      // Don't save to localStorage yet - this is just the default
     }
-  }, []);
+  }, [mounted]);
 
   // Apply theme when mode changes
   useEffect(() => {
+    if (!mounted || !isClient) return;
+
     // Save to localStorage
-    localStorage.setItem("themeMode", themeMode);
-    
+    saveThemeMode(themeMode);
+
     if (themeMode === "system") {
       // Detect system preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const systemTheme = prefersDark ? "dark" : "light";
+      const systemTheme = getSystemTheme();
       setCurrentTheme(systemTheme);
       updateDocumentClass(systemTheme);
     } else {
@@ -80,15 +139,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setCurrentTheme(themeMode as "light" | "dark");
       updateDocumentClass(themeMode as "light" | "dark");
     }
-  }, [themeMode]);
-
-  const updateDocumentClass = (theme: "light" | "dark") => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
+  }, [themeMode, mounted]);
 
   return (
     <ThemeContext.Provider value={{ themeMode, currentTheme, setThemeMode }}>
