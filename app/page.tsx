@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import React, { useState, useMemo, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Pagination } from "swiper/modules";
 import type { Swiper as SwiperCore } from "swiper";
 import "swiper/css";
@@ -18,6 +18,16 @@ import { useSettings } from "../hooks/useSettings";
 import { StatsPanel } from "../components/StatsPanel";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 
+// Dynamic import Swiper components to avoid SSR issues
+const Swiper = dynamic(
+  () => import("swiper/react").then((mod) => mod.Swiper),
+  { ssr: false }
+);
+const SwiperSlide = dynamic(
+  () => import("swiper/react").then((mod) => mod.SwiperSlide),
+  { ssr: false }
+);
+
 const TABS = [
   { id: "trade", title: "Trade" },
   { id: "history", title: "History" },
@@ -25,6 +35,7 @@ const TABS = [
 ];
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   const { settings, updateSettings } = useSettings();
   const { balance, updateBalance, resetBalance } = useBalance(
     settings.initialBalance
@@ -39,6 +50,11 @@ export default function Home() {
 
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Ensure client-side only rendering
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const lockedAmount = useMemo(() => {
     return openTrades.reduce((sum, trade) => sum + trade.entryAmount, 0);
@@ -76,6 +92,15 @@ export default function Home() {
     setActiveIndex(index);
     swiperInstance?.slideTo(index);
   };
+
+  // Show loading state until client-side hydration is complete
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-gray-500 dark:text-gray-400">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-32 md:pt-24 pb-8 transition-colors duration-300">
